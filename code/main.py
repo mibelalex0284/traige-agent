@@ -355,6 +355,30 @@ Issue:
         ]):
             product_area = "privacy"
 
+    # ── Override 2: HackerRank Billing/Subscription/Payment → community ──
+    if "order id" in lower_combined or "cs_live" in lower_combined or ("payment" in lower_combined and company == "HackerRank") or ("billing" in lower_combined and company == "HackerRank") or ("invoice" in lower_combined and company == "HackerRank"):
+        if company == "HackerRank":
+            product_area = "community"
+
+    # ── Override 3: HackerRank Infosec → screen ──
+    if "infosec" in lower_combined:
+        if company == "HackerRank":
+            product_area = "screen"
+
+    # ── Override 4: Apply tab missing → community ──
+    if "apply tab" in lower_combined:
+        product_area = "community"
+
+    # ── Override 5: Employee leaving/removing user → screen ──
+    if "employee has left" in lower_combined or "remove them" in lower_combined or "remove a user" in lower_combined or "remove an interviewer" in lower_combined or "remove user" in lower_combined:
+        if company == "HackerRank":
+            product_area = "screen"
+
+    # ── Override 6: Security vulnerability in Claude → privacy ──
+    if "security vulnerability" in lower_combined or "vulnerability" in lower_combined or "security issue" in lower_combined:
+        if company == "Claude":
+            product_area = "privacy"
+
     # ── Classify status and request type (Step 4) ──
 
     status = "Replied"
@@ -408,9 +432,19 @@ Issue:
         )
     elif status == "Replied":
         title = get_title(top_chunks[0]["text"], top_chunks[0].get("path"))
+        summary = clean_text(top_chunks[0]["text"])[:250]
         response = (
-            f"Based on the support documentation related to '{title}', "
-            f"{clean_text(top_chunks[0]['text'])[:600]}"
+            f"According to the support documentation for '{title}', "
+            f"{summary}"
+        )
+
+    # ── Override 1: Recruiter rejected score dispute (HackerRank) ──
+    if "increase my score" in lower_combined or "rejected me" in lower_combined:
+        status = "Replied"
+        product_area = "screen"
+        response = (
+            "Assessment results and hiring decisions are controlled by the hiring company. "
+            "HackerRank support cannot override recruiter decisions, change test scores, or move candidates to the next round."
         )
 
     # ── Justification generation ──
