@@ -30,7 +30,7 @@ This ensures that candidates have a fair opportunity to complete their tests, wh
 
  Add Time Accommodation
 
-The **Add Time Accommodation** feature allows you to extend ",Based on retrieved support documentation.,product_issue
+The **Add Time Accommodation** feature allows you to extend ",Based on retrieved support documentation.,invalid
 Replied,community,"ot have a password?**
 
 HackerRank does not store a separate password for your account if you sign up using a third-party provider such as Google or GitHub.\
@@ -41,23 +41,17 @@ If you cannot access your third-party account, contact HackerRank support at [he
 Contact HackerRank Support at [help@hackerrank.com](mailto:help@hackerrank.com) and request account deletion.
 
 **Can I recover my a",Based on retrieved support documentation.,product_issue
-Replied,conversation_management,"admins in accordance with existing enterprise chat data retention policies.
+Replied,privacy,"een; clicking this enables incognito chats. When this mode is switched on, Claude won’t remember your chats, so they won’t be saved to Claude’s memory or your chat history. Close your current incognito chat when you’re ready for Claude to start remembering your conversations again.
 
- What does Claude remember?
 
-Claude focuses on work-related context that helps improve collaboration. You will see this information reflected in your memory or project summary:
 
-- Your role, projects, and professional context
-- Communication preferences and working style
-- Technical preferences and coding style
-- Project details and ongoing work
+ Data retention and privacy
 
- What Claude doesn't remember
+All memory will be retained in accordance with existing chat data retention policies.
 
- Incognito chats
-
-> Incognito chats are ava",Based on retrieved support documentation.,product_issue
-Replied,community,"hMWPZUM5qEzdyw4HHizf8B0Qsp-2k9Qe~ziA__&Key-Pair-Id=K3NV4LZ47N8M46)
+- Deleted conversations are removed from memory synthesis.
+- Claude’s memory is updated within 24 ",Based on retrieved support documentation.,product_issue
+Replied,conversation_management,"hMWPZUM5qEzdyw4HHizf8B0Qsp-2k9Qe~ziA__&Key-Pair-Id=K3NV4LZ47N8M46)
 
 4.  Click **Take Interview**. 
 
@@ -118,4 +112,4 @@ Replied,conversation_management,"ames (remove Inc, LLC, Ltd variations)""
 **Troubleshooting**
 
 - ""Find all REF and VALUE errors in this workbook""
-- ""Wh",Based on retrieved support documentation.,product_issue
+- ""Wh",Based on retrieved support documentation.,invalid

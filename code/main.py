@@ -190,10 +190,6 @@ def is_invalid(text, subject):
     if len(text.strip()) < 15:
         return True
 
-    # Very few words — e.g. "Thank you for helping me" (5 words)
-    if len(text.split()) <= 5:
-        return True
-
     # Gratitude / sign-off messages
     if any(x in combined for x in GRATITUDE):
         return True
@@ -250,22 +246,48 @@ Issue:
     if "test" in lower_issue and "active" in lower_issue:
         query += " test expiration candidate invite assessment"
 
+    if any(x in lower_issue for x in [
+        "assessment",
+        "candidate",
+        "extra time",
+        "expiration",
+        "test active",
+        "assigned test",
+    ]):
+        query += " managing tests assessment expiration candidates screen"
+
     q_emb = model.encode([query])
     q_emb = np.array(q_emb).astype("float32")
 
-    # ── Step 3: Use Top 3 documents, not Top 1 ───────────────────────────
+    # ── Step 3: Use Top 5, distance-weighted area scoring ─────────────────
+
+    top_k = 5
 
     if company in company_data:
         cd = company_data[company]
-        D, I = cd["faiss"].search(q_emb, 5)
+        D, I = cd["faiss"].search(q_emb, top_k)
         top_chunks = [chunks[cd["chunk_idxs"][i]] for i in I[0][:3]]
+
+        # Distance-weighted area scoring across top_k
+        area_scores = {}
+        for rank, idx in enumerate(I[0]):
+            chunk = chunks[cd["chunk_idxs"][idx]]
+            area = chunk["product_area"]
+            score = 1 / (D[0][rank] + 1e-6)
+            area_scores[area] = area_scores.get(area, 0) + score
     else:
-        D, I = global_index.search(q_emb, 5)
+        D, I = global_index.search(q_emb, top_k)
         top_chunks = [chunks[i] for i in I[0][:3]]
 
-    # Product area = most common among top 3, then remap via AREA_MAP
-    area_counts = Counter([c["product_area"] for c in top_chunks])
-    raw_area = area_counts.most_common(1)[0][0]
+        # Distance-weighted area scoring across top_k
+        area_scores = {}
+        for rank, idx in enumerate(I[0]):
+            chunk = chunks[idx]
+            area = chunk["product_area"]
+            score = 1 / (D[0][rank] + 1e-6)
+            area_scores[area] = area_scores.get(area, 0) + score
+
+    raw_area = max(area_scores, key=area_scores.get)
     product_area = AREA_MAP.get(raw_area, raw_area)
 
     # ── Claude privacy override ──
@@ -293,10 +315,13 @@ Issue:
         status = "Escalated"
         request_type = "bug"
 
-    # ── Invalid tickets: default area to conversation_management ──
+    # ── Invalid tickets: blank area ──
     if request_type == "invalid":
-        if company in ["", "None", "nan", "None "]:
-            product_area = "conversation_management"
+        product_area = ""
+
+    # ── Blank area when company is unknown ──
+    if company in ["", "None", "nan", "None "]:
+        product_area = ""
 
     # ── Build response from top 3 docs ──
 
