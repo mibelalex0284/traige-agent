@@ -1,0 +1,121 @@
+Status,Product Area,Response,Justification,Request Type
+Replied,important_notifications,"intenance window starts will be stored safely.
+
+**How does this impact reports?**
+
+Reports and dashboards will be unavailable during the downtime.
+
+**What happens to test invites expiring on April 18, 2026?**
+
+You can update the expiration date for any test invites set to expire on April 18, 2026.
+
+- To extend invite expiry for all candidates in a test, see [Configure test invite settings](https://support.hackerrank.com/articles/9544354489-configure-test-invites-settings-for-testsinvite-expiry).",Based on retrieved support documentation.,product_issue
+Escalated,troubleshooting,Escalate to a human,Based on retrieved support documentation.,bug
+Replied,screen," provide deeper insight into how candidates structure solutions and iterate over time. To support teams beyond hiring, SkillUp expands guided learning with an AI Engineer Certification and a weekly Prompt Engineering Challenge, helping developers build modern skills with confidence.
+
+ Screen
+
+ Test Variant Updates
+
+ Test Variant Overview
+
+When you create a variant of an existing test, you now see a clear overview that explains how test variants work. This helps you get oriented before setup, whe",Based on retrieved support documentation.,product_issue
+Replied,screen,"wo ways:
+
+- [Add Time Accommodation](https://support.hackerrank.com/articles/4811403281-adding-extra-time-for-candidatesadd-time-accommodation-3)
+
+- [Add Extra Time](https://support.hackerrank.com/articles/4811403281-adding-extra-time-for-candidatesadd-extra-time-17)
+
+This ensures that candidates have a fair opportunity to complete their tests, whether due to accessibility needs or unexpected technical issues.
+
+ Add Time Accommodation
+
+The **Add Time Accommodation** feature allows you to extend ",Based on retrieved support documentation.,product_issue
+Replied,community,"ot have a password?**
+
+HackerRank does not store a separate password for your account if you sign up using a third-party provider such as Google or GitHub.\
+If you cannot access your third-party account, contact HackerRank support at [help@hackerrank.com](mailto:help@hackerrank.com) for assistance.
+
+**How do I delete an account created with incorrect credentials?**
+
+Contact HackerRank Support at [help@hackerrank.com](mailto:help@hackerrank.com) and request account deletion.
+
+**Can I recover my a",Based on retrieved support documentation.,product_issue
+Replied,conversation_management,"admins in accordance with existing enterprise chat data retention policies.
+
+ What does Claude remember?
+
+Claude focuses on work-related context that helps improve collaboration. You will see this information reflected in your memory or project summary:
+
+- Your role, projects, and professional context
+- Communication preferences and working style
+- Technical preferences and coding style
+- Project details and ongoing work
+
+ What Claude doesn't remember
+
+ Incognito chats
+
+> Incognito chats are ava",Based on retrieved support documentation.,product_issue
+Replied,community,"hMWPZUM5qEzdyw4HHizf8B0Qsp-2k9Qe~ziA__&Key-Pair-Id=K3NV4LZ47N8M46)
+
+4.  Click **Take Interview**. 
+
+5.  In the **Select a Role** dialog, select the role you want to take.
+
+    ![image.png](https://assets.usepylon.com/0de3a1ce-684d-4589-ad00-0840216c2f36%2F1771481961495-image.png?Expires=253370764800&Signature=JBsBCNOTHKtoaDE7qF2VkCIQNbzQdJoqhaAwps5wfR0L7ziuIa0MZMR9XSSSjbQnCBt3AVyt0O1VM4c9IJUzyddAmSZUPzIQWal~Nz1Z6BO60vxiz-f79EvTZ4-UumZv1c4PqjFcooG3ZzO86fJJ8dchfIHzupy~GlTCIA8HaZB1gnY4AuZdeJSNztu~b",Based on retrieved support documentation.,invalid
+Replied,travel_support,"s.html)
+
+- [Report a lost cheque](1)
+- [Request a refund](2)
+- [Keep cheques safe](3)
+
+ Report a lost cheque
+
+If your cheques are lost or stolen, they can be replaced or refunded subject to certain terms and conditions. You should immediately call the issuing bank. If you cannot find the issuing bank’s contact details, [contact us about traveller’s cheques.](/supporting-info/travelers-cheques-contact-us.html)
+
+ Issuing banks
+
+ Banco do Brasil
+
+UK +44-1733-457026
+Monday-Friday, 8 am to 5 pm GMT o",Based on retrieved support documentation.,product_issue
+Replied,general_support,"
+title: ""Visa Consumer Support""
+source_url: ""https://www.visa.co.in/support.html""
+final_url: ""https://www.visa.co.in/support.html""
+last_modified: ""2026-01-06T04:51:28.352Z""
+description: ""If you have questions about your Visa card or need help with a lost or stolen card, visit Visa’s Consumer Support page.""
+
+
+ Visa Consumer Support
+
+_Last modified: 2026-01-06T04:51:28.352Z_
+
+ Get support
+
+Need help? Give us a call For lost or stolen credit cards, please call us:
+
+| Country | Phone |
+|-|-|
+| Angui",Based on retrieved support documentation.,product_issue
+Replied,conversation_management,"ames (remove Inc, LLC, Ltd variations)""
+
+**Fix data quality issues**
+
+- ""Find and remove duplicate rows, keeping the most recent""
+- ""Identify and fix unicode/encoding errors""
+- ""Fill missing values based on patterns in the data""
+
+**Parse and transform**
+
+- ""Extract company name from email domain""
+- ""Split full address into street, city, state, zip columns""
+- ""Convert this pivot table into a flat data table""
+
+ Formulas
+
+**Troubleshooting**
+
+- ""Find all REF and VALUE errors in this workbook""
+- ""Wh",Based on retrieved support documentation.,product_issue

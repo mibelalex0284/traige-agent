@@ -1,0 +1,286 @@
+Status,Product Area,Response,Justification,Request Type
+Replied,using_the_claude_api_and_console,"//support.claude.com/en/articles/13443764-inviting-members-to-the-claude-console) before you can add them to a Workspace.
+
+1. Navigate to the desired Workspace's details page by clicking on it from the Workspaces list.
+2. Click on the “Members” tab.
+3. Click on “Add to Workspace” near the top right of the page.
+4. Choose the individual you’d like to add from the list of your organization’s members.
+5. Assign a Workspace role for this member.
+6. Confirm your selections by clicking “Add to Workspa",Based on retrieved support documentation.,product_issue
+Replied,teamtailor," HackerRank Tests from Teamtailor.
+
+- [📄 Teamtailor - HackerRank Integration: User Guide](/articles/6599779249)
+  \
+
+**Important Note:** The email ID that you have used with your Recruitee account should be the same as the email ID associated with HackerRank account for the integration to work seamlessly.
+
+\
+",Based on retrieved support documentation.,product_issue
+Replied,small_business,"com/)
+
+
+
+ Suspect fraud?
+
+Trust your instincts! If a sale seems too good to be true, it probably is. We hear all too often that what a merchant thought was a great sale turned out to be fraud. So take the time to check out that huge order that is being shipped halfway around the world to a customer with whom you have never done business. A little bit of extra work may protect you from being the victim of a fraud scheme.
+
+[Download the card acceptance guidelines for Visa merchants](/content/dam/V",Based on retrieved support documentation.,product_issue
+Replied,mock_interviews,"rld technical job interviews and provide immediate feedback on your performance.
+
+Mock interviews support:
+
+- Voice-based interaction
+
+- Chat-based interaction
+
+ Types of mock interviews
+
+HackerRank Community offers the following AI-powered mock interview types:
+
+- [📄 Technical Screen Mock Interview](/articles/5671120169)
+  \
+- [📄 Coding Mock Interview](/articles/6795045456)
+  \
+- [📄 System Design Mock Interview](/articles/8813699799)
+  \
+- [📄 Behavioural Mock Interview](/articles/5174727491)
+  ",Based on retrieved support documentation.,product_issue
+Replied,user_account_settings_and_preferences,"illing** section in HackerRank for Work allows administrators to update payment methods and billing information, and download invoices.
+
+ Updating credit card information
+
+You can update your payment method to prevent service disruptions caused by expired or outdated card details.
+
+To update your credit card:
+
+1.  Log in to **HackerRank for Work** using your credentials.
+
+2.  Go to **Manage Subscription** from the profile drop-down.
+
+3.  Click **Update** under the **Payment Method** section.
+
+  ",Based on retrieved support documentation.,product_issue
+Replied,recruitee," - HackerRank Integration Interview User Guide Prerequisites Inviting candidates to a HackerRank interview Viewing interview results
+
+_Last updated: Feb 5, 2026, 4:00 PM (Last updated 3 months ago)_
+
+This guide outlines how to use the Recruitee - HackerRank Integration to send HackerRank interview invitations and review interview results.
+
+ Prerequisites
+
+Before you begin, ensure you meet the following requirements:
+
+- You have active HackerRank and Recruitee accounts.
+
+- The HackerRank integrat",Based on retrieved support documentation.,product_issue
+Replied,practice_coding_challenges," Confirm you are using the correct account. Log in to the **same HackerRank Community account** you used to participate in the challenge. Results do not appear across different accounts.
+
+4.  Contact HackerRank support at [help@hackerrank.com](mailto:help@hackerrank.com) if you are still facing an issue with challenge results.
+
+**Note:** If you take part in a company-sponsored challenge, HackerRank does not display the results. The company that hosts the challenge contacts you directly with the ",Based on retrieved support documentation.,product_issue
+Escalated,practice_coding_challenges,Escalate to a human,Based on retrieved support documentation.,bug
+Replied,test_integrity,"
+ Step 2: Enable Proctor Mode at the test level
+
+1.  Go to the **Tests** tab.
+
+2.  Select the test you want to configure.
+
+3.  Go to **Settings \> Test Integrity**.
+
+4.  Turn on the **Proctor Mode** toggle.
+
+    ![image.png](https://assets.usepylon.com/e6a58e21-be80-4777-9eaf-f73beeee94d9%2F1760279073731-image.png?Expires=253370764800&Signature=hTlWAetXhcR~KXneVidb9AqyyLRC8-j~DSpK869QtRm5s4~y-dSxqG0-15F7nB8S7Ne7S6h0z8PIl~sARQSqC7HSx-QoryHwJrDausUXgKkix56H~w1mT0BdDXkUzrXfTx7Ih4egC1JSOT5w3eyyA3New",Based on retrieved support documentation.,product_issue
+Replied,invite_candidates,"nternet connection, you can reinvite them to retake the test at any time. You do not need to delete the previous invite or attempt before sending a new one.
+
+**Note:** When you reinvite a candidate, their previous report is automatically deleted. To recover a deleted report, contact [support@hackerrank.com](mailto:support@hackerrank.com).
+
+ Prerequisites
+
+- The candidate must have already been invited to or attempted the test.
+
+- You must have a Recruiter license to reinvite candidates. 
+
+ Reinv",Based on retrieved support documentation.,product_issue
+Replied,getting_started," within two minutes.
+
+ Screen sharing during interviews
+
+Interviewers and candidates can share their screens during interviews to improve collaboration and communication. Screen sharing allows real-time interaction and visibility when reviewing designs, code, documents, and other relevant materials. This feature works without additional plugins or software installations. 
+
+![image.png](https://assets.usepylon.com/e6a58e21-be80-4777-9eaf-f73beeee94d9%2F1760189433814-image.png?Expires=253370764800",Based on retrieved support documentation.,product_issue
+Replied,features_and_capabilities,"ames (remove Inc, LLC, Ltd variations)""
+
+**Fix data quality issues**
+
+- ""Find and remove duplicate rows, keeping the most recent""
+- ""Identify and fix unicode/encoding errors""
+- ""Fill missing values based on patterns in the data""
+
+**Parse and transform**
+
+- ""Extract company name from email domain""
+- ""Split full address into street, city, state, zip columns""
+- ""Convert this pivot table into a flat data table""
+
+ Formulas
+
+**Troubleshooting**
+
+- ""Find all REF and VALUE errors in this workbook""
+- ""Wh",Based on retrieved support documentation.,product_issue
+Replied,manage_interviews,"
+title: ""Deleting Interview Questions""
+title_slug: ""deleting-interview-questions""
+source_url: ""https://support.hackerrank.com/articles/5520105382-deleting-interview-questions""
+article_slug: ""5520105382-deleting-interview-questions""
+last_updated_exact: ""Dec 13, 2024, 5:10 AM""
+last_updated_relative: ""Last updated 1 year ago""
+breadcrumbs:
+  - ""Interviews""
+  - ""Manage Interviews""
+
+
+ Deleting Interview Questions
+
+_Last updated: Dec 13, 2024, 5:10 AM (Last updated 1 year ago)_
+
+ Overview
+
+During your ",Based on retrieved support documentation.,product_issue
+Replied,user_account_settings_and_preferences,"
+title: ""Pause Subscription""
+title_slug: ""pause-subscription""
+source_url: ""https://support.hackerrank.com/articles/5157311476-pause-subscription""
+article_slug: ""5157311476-pause-subscription""
+last_updated_exact: ""Mar 6, 2026, 12:18 AM""
+last_updated_relative: ""Last updated 2 months ago""
+breadcrumbs:
+  - ""Settings""
+  - ""User Account Settings and Preferences""
+
+
+ Pause Subscription
+
+_Last updated: Mar 6, 2026, 12:18 AM (Last updated 2 months ago)_
+
+The **Pause Subscription** feature allows individua",Based on retrieved support documentation.,product_issue
+Escalated,troubleshooting,Escalate to a human,Based on retrieved support documentation.,bug
+Replied,visa,"ide.
+
+ Security
+
+ I was contacted by someone claiming to be from Visa. Is this real or a scam?
+
+If you receive a call or email asking for your information, do not provide it. You can report a phone scam that uses Visa’s name by [contacting us](/contact-us.html). Visa does not call or email cardholders and request personal information.
+
+ My identity has been stolen – what should I do?
+
+Visit our [Lost or Stolen card](/support/consumer/lost-stolen-card.html) page – if the identity theft involves y",Based on retrieved support documentation.,product_issue
+Escalated,job_search_and_applications,Escalate to a human,Based on retrieved support documentation.,bug
+Replied,certifications," **Update Name**.
+
+The platform updates your certificate with the new name.
+
+**Why did I not receive my certificate after completing the test?**
+
+If you have not received your certificate, follow these steps:
+
+1.  Make sure you are logged in to the same HackerRank Community account you used to take the certification test. Certificates do not appear in other accounts.
+
+2.  Go to the **Certify** tab in your HackerRank Community account and confirm that you passed the test. For more information, se",Based on retrieved support documentation.,product_issue
+Replied,visa,"ay be located on the front or back of your Visa card. If you need any further support, please call Visa using the drop-down menu above.
+
+ How do I dispute a charge?
+
+To dispute a charge, please contact your issuer or bank using the freephone number (only free when dialling from within the USA) located on the front or back of your Visa card. In many cases, your issuer or bank will require detailed information regarding the transaction before resolving the disputed charge.
+
+ Why was my card declin",Based on retrieved support documentation.,product_issue
+Replied,features_and_capabilities,"
+title: ""Claude Security""
+title_slug: ""claude-security""
+source_url: ""https://support.claude.com/en/articles/14661296-claude-security""
+last_updated_iso: ""2026-04-16T23:58:49Z""
+article_id: ""17192643""
+breadcrumbs:
+  - ""Claude""
+  - ""Features and capabilities""
+
+
+ Claude Security
+
+_Last updated: 2026-04-16T23:58:49Z_
+
+Claude Security is a capability built into **[Claude](https://claude.ai)** that scans codebases for security vulnerabilities and suggests targeted patches for human review. It helps team",Based on retrieved support documentation.,product_issue
+Replied,safeguards,"moving content from shared Claude content
+
+ Blocking or removing content from Claude outputs or shared Claude content
+
+ Related Articles
+- [Claude is providing incorrect or misleading responses. What’s going on?](https://support.claude.com/en/articles/8525154-claude-is-providing-incorrect-or-misleading-responses-what-s-going-on)
+- [Does Anthropic crawl data from the web, and how can site owners block the crawler?](https://support.claude.com/en/articles/8896518-does-anthropic-crawl-data-from-the-",Based on retrieved support documentation.,product_issue
+Replied,small_business,"t your business from fraud
+
+Keep your transactions safe.
+
+[Visa card security features](/dam/VCOM/download/merchants/New_VBM_Acq_Merchant_62714_v5.pdf) [Visa card acceptance guidelines](/dam/VCOM/global/support-legal/documents/card-acceptance-guidelines-visa-merchants.pdf)
+
+ Fraud prevention
+
+Visa offers a variety of materials to support your fraud prevention, security and risk management efforts. Learn the steps to ensure the legitimacy of every Visa card, cardholder and transaction.
+
+- [Accept",Based on retrieved support documentation.,product_issue
+Replied,features_and_capabilities," compact longer conversations](https://support.claude.com/en/articles/11647753-understanding-usage-and-length-limitsh_21b66a43b4)** into new conversations to avoid running out of context.
+- **Overwrite protection**: To avoid accidental data loss, Claude warns you before overwriting existing data.
+
+> **Note:** Your use of Claude for PowerPoint is associated with your existing Claude account and is subject to the same usage limits.
+
+
+
+ Current limitations
+
+For Claude for Powerpoint use, we automat",Based on retrieved support documentation.,product_issue
+Replied,general,".
+2. Click on the three dots (""..."" button) on the upper right corner of the project.
+3. Select ""Delete"" from the menu that appears.
+4. Confirm deletion in the pop-up by clicking ""Yes, delete.""
+
+![Embedded media](https://downloads.intercomcdn.com/i/o/lupk8zyo/1784203814/66200261afca3b2d6533a0ec8de9/Screenshot%2B2025-07-09%2Bat%2B11_34_02-E2-80-AFAM.png?expires=1776784500&signature=cbcbec55e09fb0693a17b6b9d5402965c51c60cfdbc646a27bac6399762a2707&req=dScvEst%2BnoleXfMW1HO4zUvE7dHIOi1%2FgwQJrerRpXc",Based on retrieved support documentation.,invalid
+Replied,small_business,"tent/dam/VCOM/download/merchants/alert-pos-integrators.pdf)
+
+[Effectively Managing Data Breaches](/content/dam/VCOM/download/merchants/webinar-managing-data-breaches.pdf)
+
+[5 Important Visa Rules That Every Merchant Should Know](/content/dam/VCOM/download/merchants/5-important-rules-every-merchant-should-know-052615.pdf)
+
+[Identifying and Mitigating Threats to E-commerce Payment Processing](/content/dam/VCOM/download/merchants/webinar-ecommerce-threats-public.pdf)
+
+ Learn how to prevent fraud
+
+V",Based on retrieved support documentation.,product_issue
+Replied,amazon_bedrock,"
+title: ""I use Claude in Amazon Bedrock. Who do I contact for customer support inquiries?""
+title_slug: ""i-use-claude-in-amazon-bedrock-who-do-i-contact-for-customer-support-inquiries""
+source_url: ""https://support.claude.com/en/articles/7996921-i-use-claude-in-amazon-bedrock-who-do-i-contact-for-customer-support-inquiries""
+last_updated_iso: ""2026-03-16T21:17:13Z""
+article_id: ""7929296""
+breadcrumbs:
+  - ""Amazon Bedrock""
+
+
+ I use Claude in Amazon Bedrock. Who do I contact for customer support inquir",Based on retrieved support documentation.,product_issue
+Replied,gdpr_and_nyc_ai_laws,"hich it could be impossible for HackerRank to provide service to you while for non-mandatory data elements, you may choose not to provide the requested data without any consequences to the availability or the functioning of the Services.
+
+**What is HackerRank’s privacy policy?**
+
+We, at HackerRank, take Privacy issues seriously and want you to be familiar with things like the collection of data, data usage, disclosure of information, and so on. You can access HackerRank's detailed privacy policy",Based on retrieved support documentation.,product_issue
+Replied,claude_for_education,"i8gZSUjYRhw6ZSOlDdqSEcwXBzd_shAh7pQEJ-8OoE0O21DM5coOgxmO_WD5hlwiuwtS2iYXcTavhIRyQT5zKFWvfn3NA?expires=1776784500&signature=879b7989745213c6ab9551051108e1dd37b00ca1bca3be52a0606c0f10ded78b&req=dSYmF818n4VcWfMW1HO4zTEDZe0Zk%2FeEEv2ojHLMylYQTqljc62hB3hBc2Ji%0AAYGO9A0Di4c3nmwickE%3D%0A)
+
+ Turn on the Claude LTI Integration in Claude for Education organization settings
+
+1. In Claude for Education, sign in as an administrator.
+2. Navigate to **[Organization settings > Connectors](https://claude.ai/adm",Based on retrieved support documentation.,product_issue
+Replied,visa,", you can take action immediately by [filling out this form.](/Forms/visa-rules.html)
+
+ Can a merchant set a maximum or minimum limit for using my Visa card?
+
+In general, a merchant is not permitted to establish a minimum or maximum amount for a Visa transaction. However, exceptions apply in the USA and US territories – like Puerto Rico, the US Virgin Islands and Guam. In those locations, and only for credit cards, a merchant may require a minimum transaction amount of US\$10. If you encounter a",Based on retrieved support documentation.,product_issue
