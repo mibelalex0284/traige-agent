@@ -4,6 +4,30 @@ from sentence_transformers import SentenceTransformer
 import faiss
 import numpy as np
 from collections import Counter
+import re
+
+# ── Response Clean and Title Helpers ──────────────────────────────────────────
+
+def clean_text(text):
+    text = re.sub(r"---.*?---", "", text, flags=re.S)
+    text = re.sub(r"https?://\S+", "", text)
+    text = re.sub(r"\n+", " ", text)
+    text = re.sub(r"\s+", " ", text)
+    return text.strip()
+
+def get_title(text, filepath=None):
+    for line in text.splitlines():
+        if line.startswith("# "):
+            return line[2:].strip()
+    if filepath:
+        try:
+            with open(filepath, "r", encoding="utf-8", errors="ignore") as f:
+                for line in f:
+                    if line.startswith("# "):
+                        return line[2:].strip()
+        except Exception:
+            pass
+    return ""
 
 # ── Improvement #1: Chunking ──────────────────────────────────────────────────
 
@@ -226,7 +250,7 @@ def is_escalation(text):
 
 # ── Step 1: Run on sample dataset ─────────────────────────────────────────────
 
-tickets = pd.read_csv("../support_tickets/sample_support_tickets.csv")
+tickets = pd.read_csv("../support_tickets/support_tickets.csv")
 
 results = []
 
@@ -363,18 +387,48 @@ Issue:
     if company in ["", "None", "nan", "None "] and status == "Escalated":
         product_area = ""
 
-    # ── Build response from top 3 docs ──
-
-    combined_text = "\n\n".join([
-        c["text"].replace("---", "").replace("#", "")
+    # ── Build response from top chunks ──
+    clean_chunks = [
+        clean_text(c["text"])
         for c in top_chunks
-    ])[:500]
+    ]
+    response = " ".join(clean_chunks)[:700]
 
-    response = (
-        "Escalate to a human"
-        if status == "Escalated"
-        else combined_text
-    )
+    # Apply templates based on ticket type and status
+    if status == "Escalated":
+        response = (
+            "This issue appears to require human review or investigation. "
+            "Please contact the appropriate support team for further assistance."
+        )
+    elif request_type == "invalid":
+        response = (
+            "This request is outside the scope of the support agent. "
+            "The agent can only assist with HackerRank, Claude, "
+            "and Visa support topics."
+        )
+    elif status == "Replied":
+        title = get_title(top_chunks[0]["text"], top_chunks[0].get("path"))
+        response = (
+            f"Based on the support documentation related to '{title}', "
+            f"{clean_text(top_chunks[0]['text'])[:600]}"
+        )
+
+    # ── Justification generation ──
+    if status == "Escalated":
+        justification = (
+            "Escalated because the issue appears to indicate a service outage, "
+            "platform failure, or requires human investigation."
+        )
+    elif request_type == "invalid":
+        justification = (
+            "The request is outside the scope of the supported HackerRank, Claude, "
+            "or Visa support domains."
+        )
+    else:
+        justification = (
+            f"Matched documentation in the '{product_area}' support area "
+            f"and generated a response from the retrieved articles."
+        )
 
     # ── Debug prints ──
 
@@ -390,53 +444,56 @@ Issue:
         "Status": status,
         "Product Area": product_area,
         "Response": response,
-        "Justification": "Based on retrieved support documentation.",
+        "Justification": justification,
         "Request Type": request_type
     })
 
 output = pd.DataFrame(results)
 
 output.to_csv(
-    "../support_tickets/sample_output.csv",
+    "../support_tickets/output.csv",
     index=False
 )
 
-print("\n\nFinished — wrote sample_output.csv")
+print("\n\nFinished — wrote output.csv")
 
 # ── Comparison against expected answers ───────────────────────────────────────
 
-print("\n" + "=" * 80)
-print("COMPARISON: Expected vs Output")
-print("=" * 80)
+if "Product Area" in tickets.columns and "Status" in tickets.columns:
+    print("\n" + "=" * 80)
+    print("COMPARISON: Expected vs Output")
+    print("=" * 80)
 
-expected_areas = []
-expected_statuses = []
-expected_types = []
+    expected_areas = []
+    expected_statuses = []
+    expected_types = []
 
-for _, row in tickets.iterrows():
-    expected_areas.append(str(row.get("Product Area", "")).strip())
-    expected_statuses.append(str(row.get("Status", "")).strip())
-    expected_types.append(str(row.get("Request Type", "")).strip())
+    for _, row in tickets.iterrows():
+        expected_areas.append(str(row.get("Product Area", "")).strip())
+        expected_statuses.append(str(row.get("Status", "")).strip())
+        expected_types.append(str(row.get("Request Type", "")).strip())
 
-print(f"\n{'Row':<5} {'Area Match':<15} {'Status Match':<15} {'Type Match':<15} {'Correct?':<10}")
-print("-" * 60)
+    print(f"\n{'Row':<5} {'Area Match':<15} {'Status Match':<15} {'Type Match':<15} {'Correct?':<10}")
+    print("-" * 60)
 
-total_correct = 0
+    total_correct = 0
 
-for i, r in enumerate(results):
-    area_ok = r["Product Area"] == expected_areas[i] or (expected_areas[i] in ["", "nan"] and r["Product Area"] == "")
-    status_ok = r["Status"] == expected_statuses[i]
-    type_ok = r["Request Type"] == expected_types[i]
-    all_ok = area_ok and status_ok and type_ok
+    for i, r in enumerate(results):
+        area_ok = r["Product Area"] == expected_areas[i] or (expected_areas[i] in ["", "nan"] and r["Product Area"] == "")
+        status_ok = r["Status"] == expected_statuses[i]
+        type_ok = r["Request Type"] == expected_types[i]
+        all_ok = area_ok and status_ok and type_ok
 
-    if all_ok:
-        total_correct += 1
+        if all_ok:
+            total_correct += 1
 
-    mark = "✅" if all_ok else "❌"
-    area_mark = "✅" if area_ok else f"❌ got:{r['Product Area']} exp:{expected_areas[i]}"
-    status_mark = "✅" if status_ok else f"❌ got:{r['Status']} exp:{expected_statuses[i]}"
-    type_mark = "✅" if type_ok else f"❌ got:{r['Request Type']} exp:{expected_types[i]}"
+        mark = "✅" if all_ok else "❌"
+        area_mark = "✅" if area_ok else f"❌ got:{r['Product Area']} exp:{expected_areas[i]}"
+        status_mark = "✅" if status_ok else f"❌ got:{r['Status']} exp:{expected_statuses[i]}"
+        type_mark = "✅" if type_ok else f"❌ got:{r['Request Type']} exp:{expected_types[i]}"
 
-    print(f"{i+1:<5} {area_mark:<30} {status_mark:<25} {type_mark:<25} {mark}")
+        print(f"{i+1:<5} {area_mark:<30} {status_mark:<25} {type_mark:<25} {mark}")
 
-print(f"\nScore: {total_correct}/{len(results)} rows fully correct")
+    print(f"\nScore: {total_correct}/{len(results)} rows fully correct")
+else:
+    print("\nNo ground truth columns in tickets. Comparison skipped.")
