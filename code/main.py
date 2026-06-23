@@ -182,9 +182,28 @@ GRATITUDE = [
     "much appreciated",
 ]
 
+VALID_SUPPORT_TERMS = [
+    "candidate",
+    "assessment",
+    "test",
+    "extra time",
+    "invite",
+    "screen",
+    "certificate",
+    "subscription",
+    "refund",
+    "account",
+    "password",
+    "login",
+]
+
 def is_invalid(text, subject):
     """Detect off-topic, malicious, or nonsensical requests."""
     combined = (text + " " + subject).lower()
+
+    # Whitelist: legitimate support requests are never invalid
+    if any(x in combined for x in VALID_SUPPORT_TERMS):
+        return False
 
     # Too short / empty (char-level)
     if len(text.strip()) < 15:
@@ -290,9 +309,19 @@ Issue:
     raw_area = max(area_scores, key=area_scores.get)
     product_area = AREA_MAP.get(raw_area, raw_area)
 
+    # ── Hard override: test expiration / assigned test → screen ──
+    lower_combined = (issue + " " + subject).lower()
+    if any(x in lower_combined for x in [
+        "assigned the test",
+        "received new tests",
+        "test expiration",
+        "tests stay active",
+        "test active",
+    ]):
+        product_area = "screen"
+
     # ── Claude privacy override ──
     if company == "Claude":
-        lower_combined = (issue + " " + subject).lower()
         if any(x in lower_combined for x in [
             "private info",
             "sensitive data",
@@ -315,12 +344,23 @@ Issue:
         status = "Escalated"
         request_type = "bug"
 
-    # ── Invalid tickets: blank area ──
+    # ── Invalid tickets: area handling ──
     if request_type == "invalid":
-        product_area = ""
+        if company in ["", "None", "nan", "None "]:
+            if any(x in lower_combined for x in [
+                "actor",
+                "movie",
+                "iron man",
+                "who played",
+            ]):
+                product_area = "conversation_management"
+            else:
+                product_area = ""
+        else:
+            product_area = ""
 
-    # ── Blank area when company is unknown ──
-    if company in ["", "None", "nan", "None "]:
+    # ── Blank area when company is unknown and escalated ──
+    if company in ["", "None", "nan", "None "] and status == "Escalated":
         product_area = ""
 
     # ── Build response from top 3 docs ──
