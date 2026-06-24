@@ -1,10 +1,13 @@
 import pandas as pd
 from pathlib import Path
-from sentence_transformers import SentenceTransformer
+from sentence_transformers import SentenceTransformer, CrossEncoder
+from rank_bm25 import BM25Okapi
 import faiss
 import numpy as np
 from collections import Counter
 import re
+import os
+import json
 
 # ── Response Clean and Title Helpers ──────────────────────────────────────────
 
@@ -14,6 +17,11 @@ def clean_text(text):
     text = re.sub(r"\n+", " ", text)
     text = re.sub(r"\s+", " ", text)
     return text.strip()
+
+def build_response(chunk_text):
+    text = clean_text(chunk_text)
+    sentences = text.split(". ")
+    return ". ".join(sentences[:3])
 
 def get_title(text, filepath=None):
     for line in text.splitlines():
@@ -50,7 +58,8 @@ print("Loading documents...")
 
 chunks = []  # each entry: {"text": ..., "company": ..., "product_area": ..., "path": ...}
 
-data_dir = Path("../data")
+BASE_DIR = Path(__file__).resolve().parent.parent
+data_dir = BASE_DIR / "data"
 
 for file in data_dir.rglob("*.md"):
     try:
@@ -82,16 +91,62 @@ for file in data_dir.rglob("*.md"):
 
 print(f"Loaded {len(chunks)} chunks from documents")
 
+if len(chunks) == 0:
+    raise RuntimeError(
+        "No documents loaded. Check data_dir path."
+    )
+
+bm25_corpus = []
+for c in chunks:
+    bm25_corpus.append(
+        c["text"].lower().split()
+    )
+bm25 = BM25Okapi(bm25_corpus)
+
 # ── Encode all chunks ────────────────────────────────────────────────────────
 
 model = SentenceTransformer("all-MiniLM-L6-v2")
+reranker = CrossEncoder("cross-encoder/ms-marco-MiniLM-L-6-v2")
 
-all_embeddings = model.encode(
-    [c["text"] for c in chunks],
-    show_progress_bar=True
-)
+CACHE_DIR = BASE_DIR / "cache"
+CACHE_DIR.mkdir(exist_ok=True)
 
-all_embeddings = np.array(all_embeddings).astype("float32")
+CACHE_FILE = CACHE_DIR / "embeddings.npy"
+INDEX_FILE = CACHE_DIR / "global.index"
+META_FILE = CACHE_DIR / "meta.json"
+
+cache_valid = False
+if os.path.exists(CACHE_FILE) and os.path.exists(INDEX_FILE) and os.path.exists(META_FILE):
+    try:
+        with open(META_FILE, "r") as f:
+            meta = json.load(f)
+        if meta.get("chunk_count") == len(chunks):
+            cache_valid = True
+    except Exception:
+        pass
+
+if cache_valid:
+    print("Loading cached embeddings and index...")
+    all_embeddings = np.load(CACHE_FILE)
+    global_index = faiss.read_index(str(INDEX_FILE))
+else:
+    print("Generating embeddings...")
+    all_embeddings = model.encode(
+        [c["text"] for c in chunks],
+        show_progress_bar=True
+    )
+    all_embeddings = np.array(all_embeddings).astype("float32")
+    np.save(CACHE_FILE, all_embeddings)
+    
+    # Build global index
+    global_index = faiss.IndexFlatL2(all_embeddings.shape[1])
+    global_index.add(all_embeddings)
+    faiss.write_index(global_index, str(INDEX_FILE))
+    
+    # Save metadata
+    with open(META_FILE, "w") as f:
+        json.dump({"chunk_count": len(chunks)}, f)
+    print("Embeddings and index cached.")
 
 # ── Improvement #2: Separate per-company FAISS indices ────────────────────────
 
@@ -105,10 +160,6 @@ for comp in ["HackerRank", "Claude", "Visa"]:
         fi.add(embs)
         company_data[comp] = {"faiss": fi, "chunk_idxs": idxs}
         print(f"  {comp}: {len(idxs)} chunks indexed")
-
-# Global fallback
-global_index = faiss.IndexFlatL2(all_embeddings.shape[1])
-global_index.add(all_embeddings)
 
 print("Vector indices built")
 
@@ -248,9 +299,46 @@ def is_escalation(text):
     lower = text.lower()
     return any(kw in lower for kw in ESCALATION_KEYWORDS)
 
+def hybrid_search(query, company=None, top_k=20):
+    query_tokens = query.lower().split()
+    bm25_scores = bm25.get_scores(query_tokens)
+
+    # Maintain strict company isolation by masking other companies' scores
+    if company in company_data:
+        bm25_scores = np.array(bm25_scores)
+        for i, c in enumerate(chunks):
+            if c["company"] != company:
+                bm25_scores[i] = -1e9
+
+    q_emb = model.encode([query])
+    q_emb = np.array(q_emb).astype("float32")
+
+    if company in company_data:
+        cd = company_data[company]
+        D, I = cd["faiss"].search(q_emb, top_k)
+        faiss_candidates = [
+            cd["chunk_idxs"][i]
+            for i in I[0]
+            if i != -1
+        ]
+    else:
+        D, I = global_index.search(q_emb, top_k)
+        faiss_candidates = [
+            i for i in I[0]
+            if i != -1
+        ]
+
+    bm25_top = np.argsort(bm25_scores)[-top_k:]
+    combined = set(faiss_candidates) | set(bm25_top)
+
+    # Double check company isolation filter in the returned list
+    if company in company_data:
+        return [chunks[i] for i in combined if chunks[i]["company"] == company]
+    return [chunks[i] for i in combined]
+
 # ── Step 1: Run on sample dataset ─────────────────────────────────────────────
 
-tickets = pd.read_csv("../support_tickets/support_tickets.csv")
+tickets = pd.read_csv(BASE_DIR / "support_tickets" / "support_tickets.csv")
 
 results = []
 
@@ -259,6 +347,16 @@ for _, row in tickets.iterrows():
     issue = str(row.get("Issue", ""))
     subject = str(row.get("Subject", ""))
     company = str(row.get("Company", "")).strip()
+
+    # ── Company inference when company is missing ──
+    if company in ["nan", "", "None", "None ", "nan ", "None"]:
+        combined_lower = (issue + " " + subject).lower()
+        if "claude" in combined_lower:
+            company = "Claude"
+        elif "hackerrank" in combined_lower:
+            company = "HackerRank"
+        elif "visa" in combined_lower:
+            company = "Visa"
 
     # ── Step 2: Keyword routing before FAISS ──────────────────────────────
 
@@ -302,36 +400,45 @@ Issue:
     q_emb = model.encode([query])
     q_emb = np.array(q_emb).astype("float32")
 
-    # ── Step 3: Use Top 5, distance-weighted area scoring ─────────────────
+    # ── Step 3: Use Top 20 from FAISS and Rerank with CrossEncoder ─────────
 
-    top_k = 5
+    retrieved_chunks = hybrid_search(
+        query,
+        company,
+        top_k=20
+    )
 
-    if company in company_data:
-        cd = company_data[company]
-        D, I = cd["faiss"].search(q_emb, top_k)
-        top_chunks = [chunks[cd["chunk_idxs"][i]] for i in I[0][:3]]
-
-        # Distance-weighted area scoring across top_k
+    if retrieved_chunks:
+        # CrossEncoder reranking
+        pairs = [(issue, c["text"]) for c in retrieved_chunks]
+        scores = reranker.predict(pairs)
+        
+        # Sort chunks by cross-encoder score descending
+        reranked = sorted(
+            zip(scores, retrieved_chunks),
+            key=lambda x: x[0],
+            reverse=True
+        )
+        
+        # Select best 5 chunks
+        top_chunks = [chunk for score, chunk in reranked[:5]]
+        
+        # Vote for product area using the top 5 chunks weighted by reranker score
+        min_score = min(scores)
         area_scores = {}
-        for rank, idx in enumerate(I[0]):
-            chunk = chunks[cd["chunk_idxs"][idx]]
+        for score, chunk in reranked[:5]:
             area = chunk["product_area"]
-            score = 1 / (D[0][rank] + 1e-6)
-            area_scores[area] = area_scores.get(area, 0) + score
+            weight = score - min_score + 1.0  # Shift scores to be positive
+            area_scores[area] = area_scores.get(area, 0) + weight
     else:
-        D, I = global_index.search(q_emb, top_k)
-        top_chunks = [chunks[i] for i in I[0][:3]]
-
-        # Distance-weighted area scoring across top_k
+        top_chunks = []
         area_scores = {}
-        for rank, idx in enumerate(I[0]):
-            chunk = chunks[idx]
-            area = chunk["product_area"]
-            score = 1 / (D[0][rank] + 1e-6)
-            area_scores[area] = area_scores.get(area, 0) + score
 
-    raw_area = max(area_scores, key=area_scores.get)
-    product_area = AREA_MAP.get(raw_area, raw_area)
+    if area_scores:
+        raw_area = max(area_scores, key=area_scores.get)
+        product_area = AREA_MAP.get(raw_area, raw_area)
+    else:
+        product_area = ""
 
     # ── Hard override: test expiration / assigned test → screen ──
     lower_combined = (issue + " " + subject).lower()
@@ -374,10 +481,9 @@ Issue:
         if company == "HackerRank":
             product_area = "screen"
 
-    # ── Override 6: Security vulnerability in Claude → privacy ──
+    # ── Override 6: Security vulnerability → privacy ──
     if "security vulnerability" in lower_combined or "vulnerability" in lower_combined or "security issue" in lower_combined:
-        if company == "Claude":
-            product_area = "privacy"
+        product_area = "privacy"
 
     # ── Classify status and request type (Step 4) ──
 
@@ -389,6 +495,55 @@ Issue:
         status = "Replied"
 
     elif is_escalation(issue):
+        status = "Escalated"
+        request_type = "bug"
+
+    # ── Post-classification Overrides ──
+
+    lower_text = (issue + " " + subject).lower()
+
+    # User escalation keywords override
+    ESCALATE_WORDS = [
+        "refund",
+        "payment issue",
+        "billing issue",
+        "fraud",
+        "identity stolen",
+        "identity theft",
+        "security vulnerability",
+        "site down",
+        "all requests failing",
+        "cannot access account",
+        "locked out",
+        "lost access",
+        "increase my score",
+        "review my answers",
+        "order id"
+    ]
+
+    # Override 6 escalation: security vulnerability → Escalate
+    if "security vulnerability" in lower_combined or "vulnerability" in lower_combined or "security issue" in lower_combined:
+        status = "Escalated"
+        request_type = "bug"
+
+    # Fraud escalation override
+    FRAUD_WORDS = [
+        "fraud",
+        "stolen card",
+        "identity stolen",
+        "identity theft",
+        "unauthorized transaction",
+    ]
+    if (
+        any(w in lower_combined for w in FRAUD_WORDS)
+        or ("identity" in lower_combined and "stolen" in lower_combined)
+        or ("card" in lower_combined and "stolen" in lower_combined)
+    ):
+        status = "Escalated"
+        request_type = "bug"
+
+    # General escalation keywords check
+    if any(word in lower_text for word in ESCALATE_WORDS):
         status = "Escalated"
         request_type = "bug"
 
@@ -431,21 +586,12 @@ Issue:
             "and Visa support topics."
         )
     elif status == "Replied":
-        title = get_title(top_chunks[0]["text"], top_chunks[0].get("path"))
-        summary = clean_text(top_chunks[0]["text"])[:250]
-        response = (
-            f"According to the support documentation for '{title}', "
-            f"{summary}"
-        )
+        if top_chunks:
+            response = build_response(top_chunks[0]["text"])
+        else:
+            response = "I apologize, but I could not retrieve any relevant support documentation for your request."
 
-    # ── Override 1: Recruiter rejected score dispute (HackerRank) ──
-    if "increase my score" in lower_combined or "rejected me" in lower_combined:
-        status = "Replied"
-        product_area = "screen"
-        response = (
-            "Assessment results and hiring decisions are controlled by the hiring company. "
-            "HackerRank support cannot override recruiter decisions, change test scores, or move candidates to the next round."
-        )
+
 
     # ── Justification generation ──
     if status == "Escalated":
@@ -485,7 +631,7 @@ Issue:
 output = pd.DataFrame(results)
 
 output.to_csv(
-    "../support_tickets/output.csv",
+    BASE_DIR / "support_tickets" / "output.csv",
     index=False
 )
 
